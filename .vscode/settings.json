@@ -4,5 +4,6 @@
         "noopener",
         "noreferrer",
         "Searchbar"
-    ]
+    ],
+    "github.gitAuthentication": true
 }
