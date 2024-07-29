@@ -11,11 +11,14 @@ const Navbar = () => {
   return (
     <header className="w-full">
       <nav className="nav">
-        <Link href="/" className="flex items-center gap-1">
+        <Link
+          href="/"
+          className="flex items-center justify-center w-full gap-1"
+        >
           <Image
             src="/assets/icons/logo.svg"
-            width={27}
-            height={27}
+            width={40}
+            height={40}
             alt="logo"
           />
 
@@ -24,7 +27,7 @@ const Navbar = () => {
           </p>
         </Link>
 
-        <div className="flex items-center gap-5">
+        {/* <div className="flex items-center gap-5">
           {navIcons.map((icon) => (
             <Image
               key={icon.alt}
@@ -35,7 +38,7 @@ const Navbar = () => {
               className="object-contain"
             />
           ))}
-        </div>
+        </div> */}
       </nav>
     </header>
   );
