@@ -22,13 +22,13 @@ const ProductDetails = async ({ params: { id } }: Props) => {
   return (
     <div className="product-container py-12 px-6 lg:px-24">
       <div className="flex gap-16 flex-col xl:flex-row">
-        <div className="product-image">
+        <div className="product-image ">
           <Image
             src={product.image}
             alt={product.title}
             width={580}
             height={400}
-            className="mx-auto object-contain"
+            className="mx-auto object-contain "
           />
         </div>
 
@@ -81,18 +81,18 @@ const ProductDetails = async ({ params: { id } }: Props) => {
             </div> */}
           </div>
 
-          <div className="product-info flex flex-col gap-6">
+          <div className="product-info ">
             <div className="flex flex-col gap-2">
               <p className="text-4xl font-bold text-secondary">
                 {product.currency} {formatNumber(product.currentPrice)}
               </p>
-              <p className="text-2xl text-gray-500             line-through">
+              <p className="text-2xl text-gray-500 line-through">
                 {product.currency} {formatNumber(product.originalPrice)}
               </p>
             </div>
 
             <div className="flex flex-col gap-4">
-              {/* <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4">
                 <div className="product-stars flex items-center gap-2">
                   <Image
                     src="/assets/icons/star.svg"
@@ -116,7 +116,7 @@ const ProductDetails = async ({ params: { id } }: Props) => {
                     {product.reviewsCount} Reviews
                   </p>
                 </div>
-              </div> */}
+              </div>
 
               <p className="text-md text-gray-600">
                 <span className="text-primary-green font-semibold">93%</span> of
@@ -180,7 +180,11 @@ const ProductDetails = async ({ params: { id } }: Props) => {
             height={22}
           />
 
-          <Link href="/" className="text-base text-white">
+          <Link
+            href={product.url}
+            target="_blank"
+            className="text-base text-white"
+          >
             Buy Now
           </Link>
         </button>

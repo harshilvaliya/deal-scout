@@ -49,7 +49,7 @@ const Searchbar = () => {
         value={searchPrompt}
         onChange={(e) => setSearchPrompt(e.target.value)}
         placeholder="Enter Amazon product link"
-        className="searchbar-input w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+        className="searchbar-input w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary border-2 border-black border-dashed"
       />
 
       <button

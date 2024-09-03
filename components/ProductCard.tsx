@@ -10,7 +10,7 @@ interface Props {
 const ProductCard = ({ product }: Props) => {
   return (
     <Link href={`/products/${product._id}`} className="product-card group">
-      <div className="product-card_img-container relative overflow-hidden rounded-lg">
+      <div className="product-card_img-container relative overflow-hidden rounded-lg border-[1.5px] border-black border-dashed">
         <Image
           src={product.image}
           alt={product.title}
@@ -26,9 +26,9 @@ const ProductCard = ({ product }: Props) => {
         </h3>
 
         <div className="flex justify-between text-gray-600">
-          <p className="text-sm capitalize">{product.category}</p>
+          {/* <p className="text-sm capitalize">{product.category}</p> */}
 
-          <p className="text-sm font-semibold">
+          <p className="text-sm font-semibold px-1">
             {product.currency}
             <span className="ml-1">{product.currentPrice}</span>
           </p>
