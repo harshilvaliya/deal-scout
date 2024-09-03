@@ -9,28 +9,28 @@ interface Props {
 
 const ProductCard = ({ product }: Props) => {
   return (
-    <Link href={`/products/${product._id}`} className="product-card">
-      <div className="product-card_img-container">
+    <Link href={`/products/${product._id}`} className="product-card group">
+      <div className="product-card_img-container relative overflow-hidden rounded-lg">
         <Image
           src={product.image}
           alt={product.title}
           width={200}
           height={200}
-          className="product-card_img"
+          className="product-card_img transform transition-transform duration-300 group-hover:scale-105"
         />
       </div>
 
-      <div className="flex flex-col gap-3">
-        <h3 className="product-title">{product.title}</h3>
+      <div className="flex flex-col gap-2 mt-4">
+        <h3 className="product-title text-lg font-semibold group-hover:text-primary">
+          {product.title}
+        </h3>
 
-        <div className="flex justify-between">
-          <p className="text-black opacity-50 text-lg capitalize">
-            {product.category}
-          </p>
+        <div className="flex justify-between text-gray-600">
+          <p className="text-sm capitalize">{product.category}</p>
 
-          <p className="text-black text-lg font-semibold">
-            <span>{product?.currency}</span>
-            <span>{product?.currentPrice}</span>
+          <p className="text-sm font-semibold">
+            {product.currency}
+            <span className="ml-1">{product.currentPrice}</span>
           </p>
         </div>
       </div>
