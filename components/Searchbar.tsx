@@ -3,17 +3,30 @@
 import { scrapeAndStoreProduct } from "@/lib/actions";
 import { FormEvent, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
-const isValidAmazonProductURL = (url: string) => {
+const isValidProductURL = (url: string) => {
   try {
     const parsedURL = new URL(url);
     const hostname = parsedURL.hostname;
 
-    return (
+    if (
       hostname.includes("amazon.com") ||
       hostname.includes("amazon.") ||
       hostname.endsWith("amazon")
-    );
+    ) {
+      return true;
+    }
+
+    if (
+      hostname.includes("flipkart.com") ||
+      hostname.includes("flipkart.") ||
+      hostname.includes("flipkart")
+    ) {
+      return true;
+    }
+
+    return false;
   } catch (error) {
     return false;
   }
@@ -22,18 +35,29 @@ const isValidAmazonProductURL = (url: string) => {
 const Searchbar = () => {
   const [searchPrompt, setSearchPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!isValidAmazonProductURL(searchPrompt))
-      return alert("Please provide a valid Amazon link");
+    if (!isValidProductURL(searchPrompt)) {
+      alert("Please provide a valid Amazon or Flipkart link");
+      return;
+    }
 
     try {
       setIsLoading(true);
-      await scrapeAndStoreProduct(searchPrompt);
+      const product = await scrapeAndStoreProduct(searchPrompt);
+      if (product) {
+        router.push(`/products/${product._id}`);
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Error in handleSubmit:", error);
+      alert(
+        `Failed to scrape product: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     } finally {
       setIsLoading(false);
     }
@@ -48,14 +72,14 @@ const Searchbar = () => {
         type="text"
         value={searchPrompt}
         onChange={(e) => setSearchPrompt(e.target.value)}
-        placeholder="Enter product link"
+        placeholder="Enter Amazon or Flipkart product link"
         className="searchbar-input w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-0 border-2 border-black border-dashed"
       />
 
       <button
         type="submit"
         className="searchbar-btn flex items-center justify-center bg-primary text-white rounded-lg px-6 py-3 disabled:opacity-50"
-        disabled={searchPrompt === ""}
+        disabled={searchPrompt === "" || isLoading}
       >
         {isLoading ? (
           "Searching..."

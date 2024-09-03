@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import Product from "../models/product.model";
 import { connectToDB } from "../mongoose";
-import { scrapeAmazonProduct } from "../scraper";
+import { scrapeProduct } from "../scraper";
 import { getAveragePrice, getHighestPrice, getLowestPrice } from "../utils";
 import { User } from "@/types";
 import { generateEmailBody, sendEmail } from "../nodemailer";
@@ -14,13 +14,31 @@ export async function scrapeAndStoreProduct(productUrl: string) {
   try {
     connectToDB();
 
-    const scrapedProduct = await scrapeAmazonProduct(productUrl);
+    // Try to find an existing product first
+    const existingProduct = await Product.findOne({ url: productUrl });
 
-    if (!scrapedProduct) return;
+    if (existingProduct) {
+      // If the product exists and was updated recently, return it without scraping
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      if (existingProduct.updatedAt > oneDayAgo) {
+        console.log("Returning existing product without scraping");
+        return existingProduct;
+      }
+    }
+
+    // If the product doesn't exist or is outdated, try to scrape
+    const scrapedProduct = await scrapeProduct(productUrl);
+
+    if (!scrapedProduct) {
+      // If scraping fails but we have an existing product, return the existing one
+      if (existingProduct) {
+        console.log("Scraping failed, returning existing product");
+        return existingProduct;
+      }
+      throw new Error("Failed to scrape product and no existing product found");
+    }
 
     let product = scrapedProduct;
-
-    const existingProduct = await Product.findOne({ url: scrapedProduct.url });
 
     if (existingProduct) {
       const updatedPriceHistory: any = [
@@ -38,17 +56,20 @@ export async function scrapeAndStoreProduct(productUrl: string) {
     }
 
     const newProduct = await Product.findOneAndUpdate(
-      { url: scrapedProduct.url },
+      { url: productUrl },
       product,
       { upsert: true, new: true }
     );
 
-    revalidatePath(`/products/${newProduct._id}`);
+    revalidatePath("/");
+    return newProduct;
   } catch (error: any) {
+    console.error("Error in scrapeAndStoreProduct:", error);
     throw new Error(`Failed to create/update product: ${error.message}`);
   }
 }
 
+// ... (rest of the file remains unchanged)
 export async function getProductById(productId: string) {
   try {
     connectToDB();
@@ -67,7 +88,7 @@ export async function getAllProducts() {
   try {
     connectToDB();
 
-    const products = await Product.find();
+    const products = await Product.find().sort({ createdAt: -1 });
 
     return products;
   } catch (error) {
@@ -85,7 +106,9 @@ export async function getSimilarProducts(productId: string) {
 
     const similarProducts = await Product.find({
       _id: { $ne: productId },
-    }).limit(3);
+    })
+      .sort({ createdAt: -1 })
+      .limit(3);
 
     return similarProducts;
   } catch (error) {
