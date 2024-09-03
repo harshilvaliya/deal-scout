@@ -8,7 +8,6 @@ const heroImages = [
   { imgUrl: "/assets/images/hero-1.svg", alt: "Smartwatch" },
   { imgUrl: "/assets/images/hero-2.svg", alt: "Bag" },
   { imgUrl: "/assets/images/hero-3.svg", alt: "Lamp" },
-  { imgUrl: "/assets/images/hero-4.svg", alt: "Air Fryer" },
   { imgUrl: "/assets/images/hero-5.svg", alt: "Chair" },
 ];
 
@@ -22,7 +21,8 @@ const HeroCarousel = () => {
         interval={2000}
         showArrows={false}
         showStatus={false}
-        dynamicHeight={true}
+        dynamicHeight={false}
+        showIndicators={false}
         className="hero-carousel"
       >
         {heroImages.map((image) => (
@@ -42,7 +42,7 @@ const HeroCarousel = () => {
         alt="arrow"
         width={175}
         height={175}
-        className="hidden xl:block absolute -left-[20%] bottom-0 z-10"
+        className="hidden  xl:block absolute -left-[20%] -bottom-[8%] z-10"
       />
     </div>
   );

@@ -9,7 +9,7 @@ const Home = async () => {
 
   return (
     <>
-      <section className="px-6 md:px-20 py-24">
+      <section className="flex items-center justify-center min-h-screen px-6 md:px-20 py-8">
         <div className="flex flex-col md:flex-row gap-16 items-center">
           <div className="flex flex-col justify-center max-w-lg">
             <p className="small-text flex items-center">
