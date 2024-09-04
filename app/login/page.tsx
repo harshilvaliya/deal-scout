@@ -28,11 +28,14 @@ export default function Login() {
 
       const { userId, userName } = data;
 
-      // Navigate to the homepage and pass the userId and username as query parameters
-      router.push({
-        pathname: "/",
-        query: { userId, username: userName },
-      });
+      // Construct URL with query parameters
+      const queryParams = new URLSearchParams({
+        userId: userId,
+        username: userName,
+      }).toString();
+
+      // Navigate to the homepage with query parameters
+      router.push(`/?${queryParams}`);
     } catch (error: any) {
       setError(error.message);
     }

@@ -9,8 +9,8 @@ export async function POST(request: Request) {
 
     const { email, password } = await request.json();
 
+    // Find the user by email
     const user = await User.findOne({ email });
-    const username = await User.findOne({ name });
 
     if (!user) {
       return NextResponse.json(
@@ -19,6 +19,7 @@ export async function POST(request: Request) {
       );
     }
 
+    // Check if the password matches
     const isMatch = await user.matchPassword(password);
 
     if (!isMatch) {
@@ -28,15 +29,17 @@ export async function POST(request: Request) {
       );
     }
 
+    // Generate a JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
       expiresIn: "1h",
     });
 
+    // Return the response with the token and user information
     return NextResponse.json({
       message: "User logged in successfully",
       token,
-      user,
-      username
+      userId: user._id, // Pass the user ID
+      userName: user.name, // Pass the username
     });
   } catch (error: any) {
     console.error("Login error:", error); // Log the error for debugging
