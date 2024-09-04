@@ -10,6 +10,7 @@ export async function POST(request: Request) {
     const { email, password } = await request.json();
 
     const user = await User.findOne({ email });
+    const username = await User.findOne({ name });
 
     if (!user) {
       return NextResponse.json(
@@ -35,6 +36,7 @@ export async function POST(request: Request) {
       message: "User logged in successfully",
       token,
       user,
+      username
     });
   } catch (error: any) {
     console.error("Login error:", error); // Log the error for debugging
