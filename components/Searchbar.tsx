@@ -26,6 +26,13 @@ const isValidProductURL = (url: string) => {
       return true;
     }
 
+    if (
+      hostname.includes("myntra.com") ||
+      hostname.includes("myntra.") ||
+      hostname.includes("myntra")
+    ) {
+      return true;
+    }
     return false;
   } catch (error) {
     return false;

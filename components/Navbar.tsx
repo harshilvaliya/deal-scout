@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Navbar = () => {
   return (
-    <header className="w-full flex items-center justify-center p-4">
+    <header className="w-full flex sticky top-0 bg-white z-10  justify-between py-4 px-20">
       {/* Logo Section */}
       <Link href="/" className="flex items-center gap-1">
         <Image src="/assets/icons/logo.svg" width={40} height={40} alt="logo" />
@@ -13,7 +13,7 @@ const Navbar = () => {
       </Link>
 
       {/* Icons and Login Section */}
-      {/* <div className="flex items-center gap-5">
+      <div className="flex items-center gap-5">
         <Link href="/login" className="text-primary flex items-center gap-1">
           <Image
             src="/assets/icons/user.svg"
@@ -24,7 +24,7 @@ const Navbar = () => {
           />
           <span>Login</span>
         </Link>
-      </div> */}
+      </div>
     </header>
   );
 };

@@ -3,11 +3,25 @@
 import { revalidatePath } from "next/cache";
 import Product from "../models/product.model";
 import { connectToDB } from "../mongoose";
-import { scrapeProduct } from "../scraper";
+import { scrapeMyntraProduct } from "../scraper/myntra"; // Import both scrapers
+import { scrapeAmazonProduct } from "../scraper/amazon";
 import { getAveragePrice, getHighestPrice, getLowestPrice } from "../utils";
 import { User } from "@/types";
 import { generateEmailBody, sendEmail } from "../nodemailer";
+import puppeteer from 'puppeteer';
 
+// Function to scrape product details based on the URL
+async function scrapeProduct(productUrl: string) {
+  if (productUrl.includes("amazon")) {
+    return await scrapeAmazonProduct(productUrl);
+  } else if (productUrl.includes("myntra")) {
+    return await scrapeMyntraProduct(productUrl);
+  } else {
+    throw new Error("Unsupported platform");
+  }
+}
+
+// Function to scrape and store product details
 export async function scrapeAndStoreProduct(productUrl: string) {
   if (!productUrl) return;
 
@@ -69,7 +83,7 @@ export async function scrapeAndStoreProduct(productUrl: string) {
   }
 }
 
-// ... (rest of the file remains unchanged)
+// Function to get product by its ID
 export async function getProductById(productId: string) {
   try {
     connectToDB();
@@ -84,6 +98,7 @@ export async function getProductById(productId: string) {
   }
 }
 
+// Function to get all products
 export async function getAllProducts() {
   try {
     connectToDB();
@@ -96,6 +111,7 @@ export async function getAllProducts() {
   }
 }
 
+// Function to get similar products
 export async function getSimilarProducts(productId: string) {
   try {
     connectToDB();
@@ -116,6 +132,7 @@ export async function getSimilarProducts(productId: string) {
   }
 }
 
+// Function to add a user's email to a product and send a notification
 export async function addUserEmailToProduct(
   productId: string,
   userEmail: string
@@ -142,3 +159,32 @@ export async function addUserEmailToProduct(
     console.log(error);
   }
 }
+
+// Updated scraper function for Myntra using Puppeteer
+// export async function scrapeMyntraProduct(productUrl: string) {
+//   try {
+//     const browser = await puppeteer.launch();
+//     const page = await browser.newPage();
+//     await page.goto(productUrl, { waitUntil: 'networkidle2' });
+
+//     // Extract product data using Puppeteer
+//     const productData = await page.evaluate(() => {
+//       // Example scraping logic: replace with actual selectors
+//       const title = document.querySelector('h1.title')?.textContent || '';
+//       const price = document.querySelector('span.price')?.textContent || '';
+//       // Add more fields as needed
+
+//       return {
+//         title,
+//         currentPrice: price,
+//         // Add more fields as needed
+//       };
+//     });
+
+//     await browser.close();
+//     return productData;
+//   } catch (error) {
+//     console.error("Error in scrapeMyntraProduct:", error);
+//     throw new Error("Failed to scrape Myntra product");
+//   }
+// }
