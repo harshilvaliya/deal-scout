@@ -22,7 +22,7 @@ async function scrapeProduct(productUrl: string) {
 }
 
 // Function to scrape and store product details
-export async function scrapeAndStoreProduct(productUrl: string) {
+export async function scrapeAndStoreProduct(productUrl: string, userEmail: string) {
   if (!productUrl) return;
 
   try {
@@ -60,13 +60,19 @@ export async function scrapeAndStoreProduct(productUrl: string) {
         { price: scrapedProduct.currentPrice },
       ];
 
+      // Convert Set to Array for iteration
+      const updatedUserEmails = Array.from(new Set([...existingProduct.userEmails, userEmail]));
+
       product = {
         ...scrapedProduct,
         priceHistory: updatedPriceHistory,
         lowestPrice: getLowestPrice(updatedPriceHistory),
         highestPrice: getHighestPrice(updatedPriceHistory),
         averagePrice: getAveragePrice(updatedPriceHistory),
+        userEmails: updatedUserEmails,
       };
+    } else {
+      product.userEmails = [userEmail]; // Initialize with user email
     }
 
     const newProduct = await Product.findOneAndUpdate(
@@ -75,7 +81,6 @@ export async function scrapeAndStoreProduct(productUrl: string) {
       { upsert: true, new: true }
     );
 
-    revalidatePath("/");
     return newProduct;
   } catch (error: any) {
     console.error("Error in scrapeAndStoreProduct:", error);
