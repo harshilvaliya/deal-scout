@@ -99,15 +99,17 @@ export async function getProductById(productId: string) {
 }
 
 // Function to get all products
-export async function getAllProducts() {
+export async function getUserProducts(userId: string) {
   try {
-    connectToDB();
+    await connectToDB();
 
-    const products = await Product.find().sort({ createdAt: -1 });
+    // Fetch products that belong to the logged-in user
+    const products = await Product.find({ userId }).sort({ createdAt: -1 });
 
     return products;
   } catch (error) {
     console.log(error);
+    return [];
   }
 }
 
