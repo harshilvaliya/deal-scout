@@ -48,7 +48,7 @@ const Searchbar = () => {
     event.preventDefault();
 
     if (!isValidProductURL(searchPrompt)) {
-      alert("Please provide a valid Amazon or Flipkart link");
+      alert("Please provide a valid Amazon link");
       return;
     }
 
@@ -79,7 +79,7 @@ const Searchbar = () => {
         type="text"
         value={searchPrompt}
         onChange={(e) => setSearchPrompt(e.target.value)}
-        placeholder="Enter Amazon or Flipkart product link"
+        placeholder="Enter Amazon product link"
         className="searchbar-input w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-0 border-2 border-black border-dashed"
       />
 
