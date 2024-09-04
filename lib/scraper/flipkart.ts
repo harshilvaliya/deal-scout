@@ -102,7 +102,8 @@ export async function scrapeFlipkartProduct(url: string) {
         highestPrice: Number(originalPrice) || Number(currentPrice),
         averagePrice: Number(currentPrice) || Number(originalPrice),
       };
-
+      console.log(data);
+      
       return data;
     } catch (error: any) {
       console.log(`Attempt ${retries + 1} failed: ${error.message}`);

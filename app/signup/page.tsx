@@ -1,9 +1,11 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Login() {
+export default function SignUp() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -12,12 +14,12 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
 
       const data = await response.json();
@@ -26,8 +28,7 @@ export default function Login() {
         throw new Error(data.message);
       }
 
-      // Handle success (e.g., save token, redirect, etc.)
-      router.push("/product");
+      router.push("/login");
     } catch (error: any) {
       setError(error.message);
     }
@@ -35,11 +36,23 @@ export default function Login() {
 
   return (
     <div className="container mx-auto p-4 max-w-md">
-      <h1 className="text-3xl font-bold mb-6">Sign In</h1>
+      <h1 className="text-3xl  text-center py-8 text-red-600 border-b-2 border-red-600 font-bold mb-6">
+        Sign Up
+      </h1>
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-lg shadow-md"
+        className="bg-white border p-6 rounded-lg shadow-2xl"
       >
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className="w-full px-3 py-2 border rounded"
+          />
+        </div>
         <div className="mb-4">
           <input
             type="email"
@@ -60,31 +73,30 @@ export default function Login() {
             className="w-full px-3 py-2 border rounded"
           />
         </div>
-        <p className="mb-4 text-sm">
-          Forgot Password?{" "}
-          <a href="#" className="text-blue-500">
-            Click Here
-          </a>
-        </p>
         <div className="flex justify-between">
           <button
             type="submit"
-            disabled={!email || !password}
-            className={`px-4 py-2 rounded ${
-              !email || !password
+            disabled={!name || !email || !password}
+            className={`px-4 py-2 text-white rounded ${
+              !name || !email || !password
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 text-white"
+                : "bg-red-600 "
             }`}
           >
-            Sign In
+            Sign Up
           </button>
-          <button
-            type="button"
-            onClick={() => router.push("/signup")}
-            className="px-4 py-2 bg-gray-300 rounded"
-          >
-            Go to Sign Up
-          </button>
+          <div className="flex gap-2 items-center">
+            <p className="text-sm text-red-600">Dont have an acc? </p>
+            <button
+              type="button"
+              onClick={() => router.push("/login")}
+              className="px-4  py-2 bg-gray-300 bg-red-600 rounded"
+            >
+              <span className=" text-white font-spaceGrotesk duration-300">
+                Sign In
+              </span>
+            </button>
+          </div>
         </div>
       </form>
     </div>
