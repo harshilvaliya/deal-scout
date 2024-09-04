@@ -1,11 +1,14 @@
 import HeroCarousel from "@/components/HeroCarousel";
 import Searchbar from "@/components/Searchbar";
 import Image from "next/image";
-import { getAllProducts } from "@/lib/actions";
+import { getUserProducts } from "@/lib/actions";
 import ProductCard from "@/components/ProductCard";
 
-const Home = async () => {
-  const allProducts = await getAllProducts();
+const Home = async ({ searchParams }) => {
+  const { userId, username } = searchParams;
+
+  // Fetch products specific to the logged-in user
+  const userProducts = await getUserProducts(userId);
 
   return (
     <>
@@ -41,10 +44,10 @@ const Home = async () => {
       </section>
 
       <section className="trending-section px-6 md:px-20 py-16">
-        <h2 className="section-text mb-8">Recent Searches</h2>
+        <h2 className="section-text mb-8">Recent Searches by {username}</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {allProducts?.map((product) => (
+        <div className="grid grid-cols-1 place-items-center md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {userProducts?.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>

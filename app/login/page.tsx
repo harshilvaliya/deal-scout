@@ -26,7 +26,15 @@ export default function Login() {
         throw new Error(data.message);
       }
 
-      router.push("/");
+
+      const { userId, userName } = data;
+
+      // Navigate to the homepage and pass the userId and username as query parameters
+      router.push({
+        pathname: "/",
+        query: { userId, username: userName },
+      });
+
     } catch (error: any) {
       setError(error.message);
     }
