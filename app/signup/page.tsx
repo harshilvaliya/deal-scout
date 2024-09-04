@@ -36,12 +36,12 @@ export default function SignUp() {
 
   return (
     <div className="container mx-auto p-4 max-w-md">
-      <h1 className="text-3xl  text-center py-8 text-red-600 border-b-2 border-red-600 font-bold mb-6">
+      <h1 className="text-5xl text-center py-8 text-red-600 font-bold">
         Sign Up
       </h1>
       <form
         onSubmit={handleSubmit}
-        className="bg-white border p-6 rounded-lg shadow-2xl"
+        className="bg-white p-6 rounded-lg border-2 border-black border-dashed"
       >
         <div className="mb-4">
           <input
@@ -50,7 +50,7 @@ export default function SignUp() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="w-full px-3 py-2 border rounded"
+            className="w-full px-3 py-2 border border-dashed border-black rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-0"
           />
         </div>
         <div className="mb-4">
@@ -60,7 +60,7 @@ export default function SignUp() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-3 py-2 border rounded"
+            className="w-full px-3 py-2 border border-dashed border-black rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-0"
           />
         </div>
         <div className="mb-4">
@@ -70,10 +70,10 @@ export default function SignUp() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full px-3 py-2 border rounded"
+            className="w-full px-3 py-2 border border-dashed border-black rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-0"
           />
         </div>
-        <div className="flex justify-between">
+        <div className="flex flex-col gap-4 justify-between">
           <button
             type="submit"
             disabled={!name || !email || !password}
@@ -85,17 +85,22 @@ export default function SignUp() {
           >
             Sign Up
           </button>
-          <div className="flex gap-2 items-center">
-            <p className="text-sm text-red-600">Dont have an acc? </p>
-            <button
+          <div className="flex flex-col gap-2 items-center">
+            <p
+              onClick={() => router.push("/login")}
+              className="text-sm underline text-red-600 cursor-pointer"
+            >
+              Already have an acc? Log in{" "}
+            </p>
+            {/* <button
               type="button"
               onClick={() => router.push("/login")}
-              className="px-4  py-2 bg-gray-300 bg-red-600 rounded"
+              className="px-4 py-2 bg-red-500 rounded w-full"
             >
-              <span className=" text-white font-spaceGrotesk duration-300">
+              <span className="text-white font-spaceGrotesk duration-300">
                 Sign In
               </span>
-            </button>
+            </button> */}
           </div>
         </div>
       </form>

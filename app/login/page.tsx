@@ -22,12 +22,10 @@ export default function Login() {
 
       const data = await response.json();
 
-      console.log("Response:", response);
-      console.log("Data:", data);
-
       if (!response.ok) {
         throw new Error(data.message);
       }
+
 
       const { userId, userName } = data;
 
@@ -36,6 +34,7 @@ export default function Login() {
         pathname: "/",
         query: { userId, username: userName },
       });
+
     } catch (error: any) {
       setError(error.message);
     }
@@ -43,10 +42,12 @@ export default function Login() {
 
   return (
     <div className="container mx-auto p-4 max-w-md">
-      <h1 className="text-3xl font-bold mb-6">Sign In</h1>
+      <h1 className="text-5xl text-center py-8 text-red-600 font-bold">
+        Log In
+      </h1>
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-lg shadow-md"
+        className="bg-white p-6 rounded-lg border-2 border-black border-dashed"
       >
         <div className="mb-4">
           <input
@@ -55,7 +56,7 @@ export default function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-3 py-2 border rounded"
+            className="w-full px-3 py-2 border border-dashed border-black rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-0"
           />
         </div>
         <div className="mb-4">
@@ -65,34 +66,29 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full px-3 py-2 border rounded"
+            className="w-full px-3 py-2 border border-dashed border-black rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-0"
           />
         </div>
-        <p className="mb-4 text-sm">
-          Forgot Password?{" "}
-          <a href="#" className="text-blue-500">
-            Click Here
-          </a>
-        </p>
-        <div className="flex justify-between">
+        <div className="flex flex-col gap-4 justify-between">
           <button
             type="submit"
             disabled={!email || !password}
-            className={`px-4 py-2 rounded ${
+            className={`px-4 py-2 text-white rounded ${
               !email || !password
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 text-white"
+                : "bg-red-600 "
             }`}
           >
-            Sign In
+            Log In
           </button>
-          <button
-            type="button"
-            onClick={() => router.push("/signup")}
-            className="px-4 py-2 bg-gray-300 rounded"
-          >
-            Go to Sign Up
-          </button>
+          <div className="flex flex-col gap-2 items-center">
+            <p
+              onClick={() => router.push("/signup")}
+              className="text-sm underline text-red-600 cursor-pointer"
+            >
+              Don't have an account? Sign Up
+            </p>
+          </div>
         </div>
       </form>
     </div>
