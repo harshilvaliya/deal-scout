@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 export async function POST(request: Request) {
   try {
-    connectToDB();
+    await connectToDB();
 
     const { email, password } = await request.json();
 
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const isMatch = await user.matchPassword(password); // Use the matchPassword method
+    const isMatch = await user.matchPassword(password);
 
     if (!isMatch) {
       return NextResponse.json(
@@ -37,6 +37,7 @@ export async function POST(request: Request) {
       user,
     });
   } catch (error: any) {
+    console.error("Login error:", error); // Log the error for debugging
     return NextResponse.json(
       { message: `Failed to log in user: ${error.message}` },
       { status: 500 }

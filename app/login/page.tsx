@@ -22,12 +22,15 @@ export default function Login() {
 
       const data = await response.json();
 
+      console.log("Response:", response);
+      console.log("Data:", data);
+
       if (!response.ok) {
         throw new Error(data.message);
       }
 
       // Handle success (e.g., save token, redirect, etc.)
-      router.push("/product");
+      router.push("/");
     } catch (error: any) {
       setError(error.message);
     }
