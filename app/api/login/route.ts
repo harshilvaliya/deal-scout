@@ -40,6 +40,7 @@ export async function POST(request: Request) {
       token,
       userId: user._id, // Pass the user ID
       userName: user.name, // Pass the username
+      userEmail: user.email
     });
   } catch (error: any) {
     console.error("Login error:", error); // Log the error for debugging

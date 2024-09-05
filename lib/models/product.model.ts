@@ -22,13 +22,14 @@ const productSchema = new mongoose.Schema(
     category: { type: String },
     reviewsCount: { type: Number },
     isOutOfStock: { type: Boolean, default: false },
-    users: [{ email: { type: String, required: true } }],
-    default: [],
+    userEmail: { type: String, required: true, index: true },  // Added index
   },
   { timestamps: true }
 );
 
-const Product =
-  mongoose.models.Product || mongoose.model("Product", productSchema);
+// Ensure URL is unique per user
+productSchema.index({ url: 1, userEmail: 1 }, { unique: true });
+
+const Product = mongoose.models.Product || mongoose.model("Product", productSchema);
 
 export default Product;

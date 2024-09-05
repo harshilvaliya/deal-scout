@@ -39,7 +39,7 @@ const isValidProductURL = (url: string) => {
   }
 };
 
-const Searchbar = () => {
+const Searchbar = (userEmail) => {
   const [searchPrompt, setSearchPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -54,7 +54,7 @@ const Searchbar = () => {
 
     try {
       setIsLoading(true);
-      const product = await scrapeAndStoreProduct(searchPrompt);
+      const product = await scrapeAndStoreProduct(searchPrompt, userEmail);
       if (product) {
         router.push(`/products/${product._id}`);
       }

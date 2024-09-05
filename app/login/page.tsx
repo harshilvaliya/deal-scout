@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Navbar from "@/components/Navbar";
 
 export default function Login() {
   const router = useRouter();
@@ -26,12 +27,13 @@ export default function Login() {
         throw new Error(data.message);
       }
 
-      const { userId, userName } = data;
+      const { userId, userEmail, userName } = data;
 
       // Construct URL with query parameters
       const queryParams = new URLSearchParams({
         userId: userId,
         username: userName,
+        useremail: userEmail,
       }).toString();
 
       // Navigate to the homepage with query parameters
@@ -42,56 +44,58 @@ export default function Login() {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-md">
-      <h1 className="text-5xl text-center py-8 text-red-600 font-bold">
-        Log In
-      </h1>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-lg border-2 border-black border-dashed"
-      >
-        <div className="mb-4">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full px-3 py-2 border border-dashed border-black rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-0"
-          />
-        </div>
-        <div className="mb-4">
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="w-full px-3 py-2 border border-dashed border-black rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-0"
-          />
-        </div>
-        <div className="flex flex-col gap-4 justify-between">
-          <button
-            type="submit"
-            disabled={!email || !password}
-            className={`px-4 py-2 text-white rounded ${
-              !email || !password
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-red-600 "
-            }`}
-          >
-            Log In
-          </button>
-          <div className="flex flex-col gap-2 items-center">
-            <p
-              onClick={() => router.push("/signup")}
-              className="text-sm underline text-red-600 cursor-pointer"
-            >
-              Don't have an account? Sign Up
-            </p>
+    <>
+      <div className="container mx-auto p-4 max-w-md">
+        <h1 className="text-5xl text-center py-8 text-red-600 font-bold">
+          Log In
+        </h1>
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-6 rounded-lg border-2 border-black border-dashed"
+        >
+          <div className="mb-4">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-dashed border-black rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-0"
+            />
           </div>
-        </div>
-      </form>
-    </div>
+          <div className="mb-4">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-dashed border-black rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-0"
+            />
+          </div>
+          <div className="flex flex-col gap-4 justify-between">
+            <button
+              type="submit"
+              disabled={!email || !password}
+              className={`px-4 py-2 text-white rounded ${
+                !email || !password
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-red-600 "
+              }`}
+            >
+              Log In
+            </button>
+            <div className="flex flex-col gap-2 items-center">
+              <p
+                onClick={() => router.push("/signup")}
+                className="text-sm underline text-red-600 cursor-pointer"
+              >
+                Don't have an account? Sign Up
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </>
   );
 }
