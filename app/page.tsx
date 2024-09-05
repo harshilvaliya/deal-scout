@@ -3,15 +3,18 @@ import Searchbar from "@/components/Searchbar";
 import Image from "next/image";
 import { getUserProducts } from "@/lib/actions";
 import ProductCard from "@/components/ProductCard";
+import Navbar from "@/components/Navbar";
 
 const Home = async ({ searchParams }) => {
-  const { userId, username } = searchParams;
+  const { userId, username, useremail } = searchParams;
 
   // Fetch products specific to the logged-in user
-  const userProducts = await getUserProducts(userId);
+  const userProducts = await getUserProducts(useremail);
 
   return (
     <>
+      <Navbar username={username} />
+
       <section className="flex items-center justify-center min-h-screen px-6 md:px-20 py-8">
         <div className="flex flex-col md:flex-row gap-16 items-center">
           <div className="flex flex-col justify-center max-w-lg">
@@ -36,7 +39,7 @@ const Home = async ({ searchParams }) => {
               convert, engage, and retain more.
             </p>
 
-            <Searchbar />
+            <Searchbar userEmail={useremail} />
           </div>
 
           <HeroCarousel />

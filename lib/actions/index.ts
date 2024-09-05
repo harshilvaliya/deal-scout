@@ -22,20 +22,29 @@ async function scrapeProduct(productUrl: string) {
 }
 
 // Function to scrape and store product details
-export async function scrapeAndStoreProduct(productUrl: string, userEmail: string) {
-  if (!productUrl) return;
+export async function scrapeAndStoreProduct(productUrl: string, userEmail: string | { userEmail: string }) {
+  if (!productUrl || !userEmail) return;
 
   try {
-    connectToDB();
+    await connectToDB();
+
+    // Extract email string if userEmail is an object
+    const email = typeof userEmail === 'string' ? userEmail : userEmail.userEmail;
+
+    if (!email || typeof email !== 'string') {
+      throw new Error('Invalid user email');
+    }
+
+    console.log(`Processing product for email: ${email}`);
 
     // Try to find an existing product first
-    const existingProduct = await Product.findOne({ url: productUrl });
+    const existingProduct = await Product.findOne({ url: productUrl, userEmail: email });
 
     if (existingProduct) {
       // If the product exists and was updated recently, return it without scraping
       const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
       if (existingProduct.updatedAt > oneDayAgo) {
-        console.log("Returning existing product without scraping");
+        console.log(`Returning existing product for email: ${email} without scraping`);
         return existingProduct;
       }
     }
@@ -46,7 +55,7 @@ export async function scrapeAndStoreProduct(productUrl: string, userEmail: strin
     if (!scrapedProduct) {
       // If scraping fails but we have an existing product, return the existing one
       if (existingProduct) {
-        console.log("Scraping failed, returning existing product");
+        console.log(`Scraping failed, returning existing product for email: ${email}`);
         return existingProduct;
       }
       throw new Error("Failed to scrape product and no existing product found");
@@ -55,13 +64,10 @@ export async function scrapeAndStoreProduct(productUrl: string, userEmail: strin
     let product = scrapedProduct;
 
     if (existingProduct) {
-      const updatedPriceHistory: any = [
+      const updatedPriceHistory = [
         ...existingProduct.priceHistory,
         { price: scrapedProduct.currentPrice },
       ];
-
-      // Convert Set to Array for iteration
-      const updatedUserEmails = Array.from(new Set([...existingProduct.userEmails, userEmail]));
 
       product = {
         ...scrapedProduct,
@@ -69,24 +75,35 @@ export async function scrapeAndStoreProduct(productUrl: string, userEmail: strin
         lowestPrice: getLowestPrice(updatedPriceHistory),
         highestPrice: getHighestPrice(updatedPriceHistory),
         averagePrice: getAveragePrice(updatedPriceHistory),
-        userEmails: updatedUserEmails,
       };
-    } else {
-      product.userEmails = [userEmail]; // Initialize with user email
     }
 
+    // Use the extracted email string
     const newProduct = await Product.findOneAndUpdate(
-      { url: productUrl },
-      product,
+      { url: productUrl, userEmail: email },
+      { ...product, userEmail: email },
       { upsert: true, new: true }
     );
 
+    if (newProduct) {
+      console.log(`New/updated product stored for email: ${email}`);
+      console.log(`Product details: ${JSON.stringify(newProduct)}`);
+    } else {
+      console.log(`Failed to store/update product for email: ${email}`);
+    }
+
+    revalidatePath("/");
     return newProduct;
   } catch (error: any) {
-    console.error("Error in scrapeAndStoreProduct:", error);
+    // console.error(`Error in scrapeAndStoreProduct for email ${email}:`, error);
     throw new Error(`Failed to create/update product: ${error.message}`);
   }
 }
+
+
+
+
+
 
 // Function to get product by its ID
 export async function getProductById(productId: string) {
@@ -104,20 +121,28 @@ export async function getProductById(productId: string) {
 }
 
 // Function to get all products
-export async function getUserProducts(userId: string) {
+export async function getUserProducts(userEmail: string) {
   try {
     await connectToDB();
 
+    if (!userEmail) {
+      console.log("No user email provided");
+      return [];
+    }
+
+    console.log(`Fetching products for user email: ${userEmail}`);
+
     // Fetch products that belong to the logged-in user
-    const products = await Product.find({ userId }).sort({ createdAt: -1 });
+    const products = await Product.find({ userEmail }).sort({ createdAt: -1 });
+
+    console.log(`Found ${products.length} products for user ${userEmail}`);
 
     return products;
   } catch (error) {
-    console.log(error);
+    console.error(`Error fetching products for user ${userEmail}:`, error);
     return [];
   }
 }
-
 // Function to get similar products
 export async function getSimilarProducts(productId: string) {
   try {
