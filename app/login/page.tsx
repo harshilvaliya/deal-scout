@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
-
+import "./login.css";
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -45,6 +45,27 @@ export default function Login() {
 
   return (
     <>
+      <div className="fixed w-[120%] -z-10 rotate-180 -left-10 -bottom-52 -z-1">
+        <svg
+          width="100%"
+          height="100%"
+          id="svg"
+          viewBox="0 0 1440 490"
+          xmlns="http://www.w3.org/2000/svg"
+          class="transition duration-300 ease-in-out delay-150"
+        >
+          <style></style>
+          <path
+            d="M 0,500 L 0,0 C 91.23589743589744,89.24102564102564 182.47179487179488,178.4820512820513 265,198 C 347.5282051282051,217.5179487179487 421.348717948718,167.3128205128205 485,167 C 548.651282051282,166.6871794871795 602.1333333333332,216.26666666666662 690,227 C 777.8666666666668,237.73333333333338 900.1179487179488,209.62051282051286 993,204 C 1085.8820512820512,198.37948717948714 1149.394871794872,215.25128205128203 1219,185 C 1288.605128205128,154.74871794871797 1364.302564102564,77.37435897435898 1440,0 L 1440,500 L 0,500 Z"
+            stroke="none"
+            stroke-width="0"
+            fill="#e43030"
+            fill-opacity="1"
+            class="transition-all duration-300 ease-in-out delay-150 path-0"
+            transform="rotate(-180 720 250)"
+          ></path>
+        </svg>
+      </div>
       <div className="container mx-auto p-4 max-w-md">
         <h1 className="text-5xl text-center py-8 text-red-600 font-bold">
           Log In
